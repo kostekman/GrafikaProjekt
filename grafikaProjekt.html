@@ -1,48 +1,47 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html>
-
-<head>
-    <title>Rigid body - Physijs</title>
-
-
-    <script type="text/javascript" src="three.js"></script>
-
-
-    <script type="text/javascript">
-
-        var scene = new THREE.Scene();
-
-        var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-
-        var renderer = new THREE.WebGLRenderer();
-
-        renderer.setSize(window.innerWidth, window.innerHeight);
-
-        document.body.appendChild(renderer.domElement);
-
-        var dae,
-          loader = new THREE.ColladaLoader();
-
-        function loadCollada(collada){
-          dae = collada.scene;
-          scene.add(dae);
-        }
-
-        loader.load('models/KTM+Duke+390/model.dae', loadCollada)
-
-        function renderBike() {
-          requestAnimationFrame(renderBike)
-          renderer.render(scene, camera)
-        }
-
-        renderBike();
-
-    </script>
-</head>
-
-<body>
-<div id="viewport"></div>
-</body>
-
+  <head>
+		<title>MotoRace</title>
+		<style>
+			body {
+				background-color: black;
+			}
+			#gameCanvas {
+				background-color: black;
+				width: 640px;
+				height: 360px;
+				margin: auto;
+				align: center;
+			}
+			#scoreboard {
+				text-align: center;
+				font-family: Segoe UI, Helvetica, Ubuntu, sans-serif;
+				color: white;
+			}
+			#scores {
+				font-size:600%;
+				padding:0;
+				margin:0;
+				color: white;
+			}
+			#title {
+				background-color: white;
+				color: black;
+			}
+		</style>
+	</head>
+	<body onload='setup();'>
+		<div id='gameCanvas'></div>
+		<script src='./Scripts/three.min.js'></script>
+		<script src='./Scripts/keyboard.js'></script>
+		<script src='./Scripts/game.js'></script>
+    <script src='./Scripts/ColladaLoader.js'></script>
+		<div id='scoreboard'>
+			<h1 id='scores'>0</h1>
+			<h1 id='title'>Moto Race</h1>
+			<h2 id='winnerBoard'></h2>
+			<h3>A - move left
+			<br>D - move right</h3>
+		</div>
+	</body>
 </html>
