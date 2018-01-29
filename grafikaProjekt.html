@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Rigid body - Physijs</title>
+
+
+    <script type="text/javascript" src="three.js"></script>
+
+
+    <script type="text/javascript">
+
+        var scene = new THREE.Scene();
+
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+
+        var renderer = new THREE.WebGLRenderer();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        document.body.appendChild(renderer.domElement);
+
+        var dae,
+          loader = new THREE.ColladaLoader();
+
+        function loadCollada(collada){
+          dae = collada.scene;
+          scene.add(dae);
+        }
+
+        loader.load('models/KTM+Duke+390/model.dae', loadCollada)
+
+        function renderBike() {
+          requestAnimationFrame(renderBike)
+          renderer.render(scene, camera)
+        }
+
+        renderBike();
+
+    </script>
+</head>
+
+<body>
+<div id="viewport"></div>
+</body>
+
+</html>
