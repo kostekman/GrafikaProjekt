@@ -2,7 +2,7 @@ var renderer, scene, camera, pointLight, spotLight;
 
 // field variables
 var fieldWidth = 1200, fieldHeight = 200;
-
+var truck;
 var WIDTH = 640, HEIGHT = 360;
 
 var VIEW_ANGLE = 50,
@@ -27,17 +27,15 @@ function setup(){
   setupCamera();
   setupLight();
   setupTraffic();
-
   draw();
 }
 
 function draw(){
-  renderer.render(scene, camera)
-
   requestAnimationFrame(draw);
   playerPaddleMovement();
   computeTraffic();
   countScore();
+  renderer.render(scene, camera)
 }
 
 
@@ -77,6 +75,17 @@ function setupCar(){
       paddle1Material);
 
     scene.add(paddle1);
+
+    var loader = new THREE.ColladaLoader();
+    loader.load("Truck_dae.dae", function (result) {
+        truck = result.scene.children[0].children[0].clone();
+        truck.scale.set(0.8, 0.8, 0.8);
+        truck.position.x = truck.position.x - 545;
+        truck.position.y = paddle1.position.y;
+        truck.rotation.z = 90 * Math.PI/180;
+        scene.add(truck);
+        paddle1.position.x = paddle1.position.x - 1000;
+    });
 
 
     paddle1.position.x = -fieldWidth/2 + paddleWidth + 10;
@@ -120,8 +129,8 @@ function setupTraffic(){
 function computeTraffic(){
     for(i = 0; i < trafficCars.length; i++){
 
-      if(trafficCars[i].position.x < paddle1.position.x + 30 && trafficCars[i].position.x > paddle1.position.x - 30){
-        if(trafficCars[i].position.y + 15 > paddle1.position.y && trafficCars[i].position.y - 15 < paddle1.position.y){
+      if(trafficCars[i].position.x < truck.position.x + 45 && trafficCars[i].position.x > truck.position.x - 45){
+        if(trafficCars[i].position.y + 15 > truck.position.y && trafficCars[i].position.y - 15 < truck.position.y){
           speed = 0;
           pointsIncrease = 0;
           paddleSpeed = 0;
@@ -131,7 +140,7 @@ function computeTraffic(){
         }
       }
 
-      if(trafficCars[i].position.x > paddle1.position.x - 30){
+      if(trafficCars[i].position.x > truck.position.x - 40){
         trafficCars[i].position.x -= speed;
       } else {
         trafficCars[i].position.x = fieldWidth;
@@ -145,40 +154,29 @@ function generateYPostion(){
 }
 
 function setupRoad(){
+
   // set up the playing surface plane
    var planeWidth = fieldWidth,
   planeHeight = fieldHeight,
   planeQuality = 10;
 
-  var planeMaterial =
-  new THREE.MeshLambertMaterial(
-  {
-      color: 0x808080
-  });
-
-  var grassMaterial =
-  new THREE.MeshLambertMaterial(
-  {
-      color: 0x00FF00
-  });
-
   // create the playing surface plane
-  var plane = new THREE.Mesh(
+  var plane = createMesh(
       new THREE.PlaneGeometry(
       planeWidth * 1.1,	// 95% of table width, since we want to show where the ball goes out-of-bounds
       planeHeight,
       planeQuality,
       planeQuality),
-      planeMaterial);
+      document.getElementById("termac").src);
 
 
-  var grass = new THREE.Mesh(
+  var grass = createMesh(
       new THREE.PlaneGeometry(
       planeWidth,	// 95% of table width, since we want to show where the ball goes out-of-bounds
-      planeHeight * 50,
+      planeHeight * 5,
       planeQuality,
       planeQuality),
-      grassMaterial);
+      document.getElementById("grass").src);
 
   grass.position.z = plane.position.z - 1;
 
@@ -213,6 +211,11 @@ function setupLight(){
 
   // add to the scene
   scene.add(pointLight);
+
+  var spotLight = new THREE.SpotLight(0xffffff);
+  spotLight.position.set(150, 150, 150);
+  spotLight.intensity = 2;
+  scene.add(spotLight);
 }
 
 function setupScene(){
@@ -272,4 +275,14 @@ function playerPaddleMovement()
 	paddle1.scale.y += (1 - paddle1.scale.y) * 0.2;
 	paddle1.scale.z += (1 - paddle1.scale.z) * 0.2;
 	paddle1.position.y += paddle1DirY;
+  truck.position.y += paddle1DirY;
+}
+
+function createMesh(geom, imageFile) {
+    var texture = THREE.ImageUtils.loadTexture(imageFile)
+    var mat = new THREE.MeshPhongMaterial();
+    mat.map = texture;
+
+    var mesh = new THREE.Mesh(geom, mat);
+    return mesh;
 }

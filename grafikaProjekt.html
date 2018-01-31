@@ -32,9 +32,11 @@
 	</head>
 	<body onload='setup();'>
 		<div id='gameCanvas'></div>
-		<script src='./Scripts/three.min.js'></script>
+		<script src='./Scripts/three.js'></script>
 		<script src='./Scripts/keyboard.js'></script>
 		<script src='./Scripts/game.js'></script>
+    <script src='./Scripts/ColladaLoader.js'></script>
+    <script src='./Scripts/jquery-1.9.0.js'></script>
 		<div id='scoreboard'>
 			<h1 id='scores'>0</h1>
 			<h1 id='title'>Moto Race</h1>
@@ -42,5 +44,7 @@
 			<h3>A - move left
 			<br>D - move right</h3>
 		</div>
+    <img id='grass' src='./textures/grass.png' style='display:none'></img>
+    <img id='termac' src='./textures/termac.jpg' style='display:none'></img>
 	</body>
 </html>
